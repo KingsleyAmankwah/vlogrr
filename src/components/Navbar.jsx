@@ -1,9 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import { FaUserLock } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { BiLogOutCircle, BiAddToQueue } from "react-icons/bi";
 import { HiOutlineMenu } from "react-icons/hi";
+// import { IoMoon, IoSunny } from "react-icons/io5";
 import Search from "./Search";
 
 const Navbar = ({ toggleSidebar }) => {
@@ -12,11 +13,7 @@ const Navbar = ({ toggleSidebar }) => {
       <div className="py-4 px-3 flex items-center z-40">
         {/* Brand */}
         <div className="flex items-center mr-2">
-          {/* <div className=" text-[#e60023]  w-9 h-9 cursor-pointer">
-            <img src="./pcl.png" alt="Logo" />
-          </div> */}
-
-          <div className="hidden md:flex justify-center  items-center h-[48px]  min-w-[123px] bg-[rgba(17,17,17)] text-white rounded-3xl font-[700]">
+          <div className="flex justify-center  items-center h-[48px]  min-w-[123px] bg-[rgba(17,17,17)] text-white rounded-3xl font-[700]">
             {" "}
             <p>Vlogrr</p>
           </div>
@@ -27,7 +24,10 @@ const Navbar = ({ toggleSidebar }) => {
           <UserProfile />
         </div>
 
-        <div className="block ml-auto md:hidden" onClick={toggleSidebar}>
+        <div
+          className="block ml-auto md:hidden cursor-pointer"
+          onClick={toggleSidebar}
+        >
           <HiOutlineMenu className="w-6 h-6" />
         </div>
       </div>
@@ -56,7 +56,7 @@ const UserProfile = () => {
         onClick={showMenu}
       >
         <img
-          //   src={}
+          src="https://akingsley.netlify.app/images/p3.jpg"
           alt="User profile"
           className="w-[90%] h-[90%] border border-active-bg rounded-full"
         />
