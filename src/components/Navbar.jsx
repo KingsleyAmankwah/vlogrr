@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { FaUserLock } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
-import { BiLogOutCircle, BiAddToQueue } from "react-icons/bi";
+import { BiLogOutCircle } from "react-icons/bi";
 import { HiOutlineMenu } from "react-icons/hi";
+import { AiOutlineAppstoreAdd } from "react-icons/ai";
+
 // import { IoMoon, IoSunny } from "react-icons/io5";
 import Search from "./Search";
 
@@ -48,7 +50,7 @@ const UserProfile = () => {
         className="flex flex-col items-end font-sans cursor-pointer"
       >
         <p className="text-3xl w-9 hidden lg:flex">
-          <BiAddToQueue />
+          <AiOutlineAppstoreAdd />
         </p>
       </div>
       <div
