@@ -6,27 +6,11 @@ import { IoCloudUpload, IoLocation } from "react-icons/io5";
 
 import { categories } from "../data";
 
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-places-autocomplete";
-
 const Sidebar = () => {
   const [category, setCategory] = useState("Select category");
   const [videoAsset, setVideoAsset] = useState(null);
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState("");
-
-  const handleLocationChange = (value) => {
-    setLocation(value);
-  };
-
-  const handleLocationSelect = async (value) => {
-    const results = await geocodeByAddress(value);
-    const latLng = await getLatLng(results[0]);
-    console.log(latLng);
-    setLocation(value);
-  };
 
   return (
     <form class="flex justify-center items-center w-full min-h-screen p-10">
@@ -43,56 +27,6 @@ const Sidebar = () => {
           // value={title}
           // onChange={(e) => setTitle(e.target.value)}
         />
-
-        <PlacesAutocomplete
-          value={location}
-          onChange={handleLocationChange}
-          onSelect={handleLocationSelect}
-        >
-          {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
-            <div className="w-full">
-              <div className="relative">
-                <div className="absolute left-0 top-0 h-full w-10 flex items-center justify-center">
-                  <IoLocation />
-                </div>
-                <input
-                  {...getInputProps({
-                    placeholder: "Location",
-                    className:
-                      "w-full pl-12 pr-4 py-2 text-lg placeholder-gray-500 border border-gray-300 outline-none rounded-md",
-                  })}
-                />
-                <div className="autocomplete-dropdown-container">
-                  {loading && <div>Loading...</div>}
-                  {suggestions.map((suggestion) => {
-                    const className = suggestion.active
-                      ? "suggestion-item--active"
-                      : "suggestion-item";
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                      : { backgroundColor: "#ffffff", cursor: "pointer" };
-                    return (
-                      <div
-                        {...getSuggestionItemProps(suggestion, {
-                          className,
-                          style,
-                        })}
-                      >
-                        <span>{suggestion.description}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-        </PlacesAutocomplete>
 
         <div class="w-full md:flex justify-between items-center my-4 gap-8">
           <div class="w-full bg-blue-500 flex justify-between items-center my-4 gap-8">
