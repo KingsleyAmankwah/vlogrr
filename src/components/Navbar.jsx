@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { FaUserLock } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
@@ -8,6 +8,7 @@ import { AiOutlineAppstoreAdd } from "react-icons/ai";
 
 // import { IoMoon, IoSunny } from "react-icons/io5";
 import Search from "./Search";
+import { getAuth } from "firebase/auth";
 
 const Navbar = ({ toggleSidebar }) => {
   return (
@@ -15,9 +16,10 @@ const Navbar = ({ toggleSidebar }) => {
       <div className="py-4 px-3 flex items-center z-40">
         {/* Brand */}
         <div className="flex items-center mr-2">
-          <div className="flex justify-center  items-center h-[48px]  min-w-[123px] bg-[rgba(17,17,17)] text-white rounded-3xl font-[700]">
-            {" "}
-            <p>Vlogrr</p>
+          <div className="flex justify-center items-center h-[48px] min-w-[123px] rounded-3xl bg-gradient-to-r from-blue-500 to-purple-500">
+            <p className="text-white font-bold text-2xl tracking-wider">
+              Vlogrr
+            </p>
           </div>
         </div>
         {/* main */}
@@ -41,6 +43,14 @@ const UserProfile = () => {
 
   const showMenu = () => {
     setIsMenu((menu) => !menu);
+  };
+
+  const auth = getAuth();
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    auth.signOut();
+    navigate("/login");
   };
 
   return (
@@ -89,7 +99,10 @@ const UserProfile = () => {
               </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-active cursor-pointer hover:bg-active-bg p-2">
+            <div
+              className="flex items-center gap-2 text-active cursor-pointer hover:bg-active-bg p-2"
+              onClick={onLogout}
+            >
               <BiLogOutCircle className="text-lg" />
               <p>Logout</p>
             </div>
