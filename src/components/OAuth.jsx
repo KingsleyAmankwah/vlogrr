@@ -1,26 +1,37 @@
 import google from "../assets/google.png";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 function OAuth() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  const firestoreDb = getFirestore();
 
   const onGoogleClick = async () => {
-    const auth = getAuth();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        if (user) {
-          toast.success(`Welcome ${user.displayName}`);
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        toast.error(errorMessage);
-      });
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      if (user) {
+        // Save user details in the `users` collection
+        const userRef = doc(firestoreDb, "users", user.uid);
+        const userData = {
+          name: user.displayName,
+          email: user.email,
+          photoUrl: user.photoURL,
+          createdAt: new Date(),
+        };
+        await setDoc(userRef, userData);
+
+        toast.success(`Welcome ${user.displayName}`);
+        navigate("/");
+      }
+    } catch (error) {
+      const errorMessage = error.message;
+      toast.error(errorMessage);
+    }
   };
 
   return (
