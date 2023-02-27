@@ -4,9 +4,8 @@ import Create from "../components/Create";
 import Navbar from "../components/Navbar";
 import Post from "../components/Post";
 import Sidenav from "../components/Sidenav";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Feed from "../components/Feed";
+import VideoDetails from "../components/VideoDetails";
 
 function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,14 +20,15 @@ function Home() {
             <div className="h-full w-full py-3 px-5">
               <Routes>
                 <Route path="/" element={<Feed />} />
-                <Route path="/create" element={<Create />} />
                 <Route path="/post" element={<Post />} />
+                <Route path="/create" element={<Create />} />
+                <Route path="/video/:id" element={<VideoDetails />} />
               </Routes>
             </div>
           </div>
         </div>
       </main>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 }
