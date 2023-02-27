@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
@@ -33,23 +34,29 @@ function Register() {
     setLoading(true);
 
     const auth = getAuth();
+    const firestoreDb = getFirestore();
 
     if (password !== password2) {
       toast.error("The two passwords do not match!");
       setLoading(false);
       return;
     }
+
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user;
 
-        updateProfile(auth.currentUser, {
+        // Save user details in "users" collection
+        const userDocRef = doc(firestoreDb, "users", user.uid);
+        await setDoc(userDocRef, {
+          email: user.email,
           displayName: name,
+          photoURL: user.photoURL,
         });
 
         setLoading(false);
-        toast.success(`${user.email} registered succesfully!`);
+        toast.success(`${user.email} registered successfully!`);
         navigate("/");
       })
       .catch((error) => {
