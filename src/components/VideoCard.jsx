@@ -41,7 +41,7 @@ const VideoCard = ({ videoData }) => {
               {videoData?.title}
             </p>
             <p className="text-gray-500 text-sm">
-              {moment(videoData?.uploadedAt).fromNow()}
+              {moment(videoData?.timestamp?.toDate()).fromNow()}
             </p>
           </div>
           <div className="flex items-center mt-4">
