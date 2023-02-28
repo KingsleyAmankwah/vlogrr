@@ -4,11 +4,14 @@ import { FaUserLock } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { BiLogOutCircle } from "react-icons/bi";
 import { HiOutlineMenu } from "react-icons/hi";
+import { useAuthState } from "react-firebase-hooks/auth";
+
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
 
 // import { IoMoon, IoSunny } from "react-icons/io5";
 import Search from "./Search";
 import { getAuth } from "firebase/auth";
+import Spinner from "./Spinner";
 
 const Navbar = ({ toggleSidebar }) => {
   return (
@@ -40,12 +43,13 @@ const Navbar = ({ toggleSidebar }) => {
 };
 const UserProfile = () => {
   const [isMenu, setIsMenu] = useState(false);
+  const auth = getAuth();
+  const [user, loading] = useAuthState(auth);
 
   const showMenu = () => {
     setIsMenu((menu) => !menu);
   };
 
-  const auth = getAuth();
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -53,22 +57,27 @@ const UserProfile = () => {
     navigate("/login");
   };
 
+  if (loading) return <Spinner />;
+
   return (
     <div className="flex items-center gap-4 group relative">
-      <div
+      <Link
+        to={`/post`}
         // onClick={showMenu}
         className="flex flex-col items-end font-sans cursor-pointer"
       >
         <p className="text-3xl w-9 hidden lg:flex">
           <AiOutlineAppstoreAdd />
         </p>
-      </div>
+      </Link>
       <div
         className="w-10 h-10 flex items-center justify-center border border-active-bg rounded-full cursor-pointer"
         onClick={showMenu}
       >
         <img
-          src="https://akingsley.netlify.app/images/p3.jpg"
+          src={
+            user.photoURL || `https://ui-avatars.com/api/?name=${user.email[0]}`
+          }
           alt="User profile"
           className="w-[90%] h-[90%] border border-active-bg rounded-full"
         />
