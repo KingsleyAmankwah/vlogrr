@@ -44,10 +44,10 @@ function Sidenav({ open }) {
     <div
       className={`${
         open ? "block" : "hidden"
-      }  md:block bg-white px-4 h-[90vh] w-64 flex items-center justify-between`}
+      }  md:block bg-white px-4 h-full w-64 flex items-center justify-between`}
     >
       <div className="w-[85%] mx-auto h-full flex flex-col justify-between items-center pt-20">
-        <div className=" w-full h-[50vh] flex flex-col gap-2">
+        <div className=" w-full h-[100vh] flex flex-col gap-2">
           {/* Navigations */}
           {Navs.map((nav, index) => {
             return (
@@ -62,11 +62,11 @@ function Sidenav({ open }) {
             );
           })}
           <Link
-            to={`/create`}
+            to={`/post`}
             className={`flex gap-4 items-center cursor-pointer bg-gray-900 text-white rounded-3xl  py-2 px-5 w-full transition-all duration-75 ease-in-out`}
           >
             <AiOutlineAppstoreAdd />
-            <p>Create</p>
+            <p>Post</p>
           </Link>
         </div>
       </div>
