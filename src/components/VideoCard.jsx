@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { getUserInfo } from "../utils/fetchData";
 import { getFirestore } from "firebase/firestore";
 import { firebaseApp } from "../firebase-config";
+import Spinner from "./Spinner";
 
 const avatar =
   "https://ak.picdn.net/contributors/3038285/avatars/thumb.jpg?t=164360626";
@@ -13,23 +14,63 @@ const VideoCard = ({ videoData }) => {
 
   const [userId, setUserId] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (videoData) setUserId(videoData.userId);
-    if (userId)
-      getUserInfo(firestoreDb, userId).then((videoData) => {
-        setUserInfo(videoData);
-      });
-  }, [firestoreDb, userId, videoData]);
+    if (videoData) {
+      setUserId(videoData.userId);
+    }
+  }, [videoData]);
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    const getUserInfoAsync = async () => {
+      try {
+        const userInfo = await getUserInfo(firestoreDb, userId);
+        setUserInfo(userInfo);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getUserInfoAsync();
+  }, [firestoreDb, userId]);
+
+  if (isLoading) return <Spinner />;
+
+  // if (error) {
+  //   return (
+  //     <div className="w-full flex justify-center items-center">
+  //       <p className="text-red-500 text-sm">{error}</p>
+  //     </div>
+  //   );
+  // }
+
+  if (!videoData) {
+    return (
+      <div className="w-full flex justify-center items-center">
+        <p className="text-red-500 text-sm">Error loading video data.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
       <div className="border border-gray-400 rounded-lg shadow-md">
         <Link to={`/video/${videoData?.id}`}>
           <video
-            className="w-full object-cover object-center"
-            src={videoData.videoUrl}
-            alt={videoData.title}
+            className="w-full h-full object-cover object-center"
+            src={videoData?.videoUrl}
+            alt={videoData?.title}
             controls
             onMouseOver={(e) => e.target.play()}
             onMouseOut={(e) => e.target.pause()}
