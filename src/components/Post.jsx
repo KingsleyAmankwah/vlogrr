@@ -47,7 +47,6 @@ const Post = () => {
     deleteObject(deleteRef).then(() => {
       setVideoAsset(null);
     });
-  
   };
 
   const storage = getStorage(firebaseApp);
@@ -150,7 +149,7 @@ const Post = () => {
               name="category"
               onChange={handleInputChange}
             >
-              <option disabled defaultValue className="py-2 px-4 rounded-md">
+              <option disabled className="py-2 px-4 rounded-md">
                 Select category
               </option>
               {categories &&
