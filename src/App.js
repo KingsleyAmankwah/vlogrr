@@ -9,8 +9,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NoInternet from "./components/NoInternet";
 
-// import Test from "./pages/Test";
-
 const App = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
