@@ -5,15 +5,15 @@ import { FaSmileWink } from "react-icons/fa";
 // import { AiOutlineLogout } from "react-icons/ai";
 import { IoCloudUpload, IoLocation } from "react-icons/io5";
 import Spinner from "./Spinner";
-// import {
-// getStorage,
-// ref,
-// uploadBytesResumable,
-// getDownloadURL,
-// deleteObject,
-// } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { firebaseApp } from "../firebase-config";
-import { doc, getFirestore, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { categories } from "../data";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -29,33 +29,58 @@ const Post = () => {
   };
 
   const [formState, setFormState] = useState(initialFormState);
-  const { category, title, location, description, videoAsset } = formState;
+  const { category, title, location, description } = formState;
   const [loading, setLoading] = useState(false);
+  const [videoAsset, setVideoAsset] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const firestoreDb = getFirestore(firebaseApp);
   const navigate = useNavigate();
   const auth = getAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormState({ ...formState, [name]: value });
   };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormState({ ...formState, [name]: value });
-  // };
 
   const handleRemoveVideo = () => {
-    setFormState((prevState) => ({
-      ...prevState,
-      videoAsset: null,
-    }));
+    const deleteRef = ref(storage, videoAsset);
+    deleteObject(deleteRef).then(() => {
+      setVideoAsset(null);
+    });
+  
   };
 
-  const uploadVideo = async (e) => {
+  const storage = getStorage(firebaseApp);
+
+  const uploadVideo = (e) => {
+    const videoFile = e.target.files[0];
+    const storageRef = ref(storage, `videos/${Date.now()}_${videoFile.name}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, videoFile);
+
+    // Track the upload progress
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(`Upload is ${progress}% done`);
+        setUploadProgress(progress);
+        setLoading(true);
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setVideoAsset(downloadURL);
+          setLoading(false);
+        });
+      }
+    );
+  };
+
+  const uploadVideoDetails = async (e) => {
     e.preventDefault();
 
     try {
@@ -79,9 +104,9 @@ const Post = () => {
         location,
         videoUrl: videoAsset,
         description,
-        timestamp: serverTimestamp(),
       };
 
+      // save video metadata to Firestore
       await setDoc(doc(firestoreDb, "videos", data.id), data);
 
       setFormState(initialFormState);
@@ -96,7 +121,10 @@ const Post = () => {
   };
 
   return (
-    <form className="flex justify-center items-center w-full min-h-screen p-10">
+    <form
+      className="flex justify-center items-center w-full min-h-screen p-10"
+      onSubmit={uploadVideoDetails}
+    >
       <div className="w-4/5 md:w-full h-full border border-gray-300 rounded-md p-4 flex flex-col items-center justify-center gap-2">
         <div className="w-full">
           <div className="relative">
@@ -119,6 +147,7 @@ const Post = () => {
             <select
               className="w-full bg-blue-500 text-white outline-none py-2 px-4 rounded-md"
               value={category}
+              name="category"
               onChange={handleInputChange}
             >
               <option disabled defaultValue className="py-2 px-4 rounded-md">
@@ -129,10 +158,8 @@ const Post = () => {
                   <option
                     key={data.id}
                     className="p-2 text-lg hover:bg-black hover:bg-opacity-25"
-                    // onClick={() => setCategory(data.name)}
                     value={data.name}
                   >
-                    {/* {data.iconSrc} */}
                     {data.name}
                   </option>
                 ))}
@@ -149,6 +176,7 @@ const Post = () => {
                 placeholder="Location"
                 type="text"
                 value={location}
+                name="location"
                 onChange={handleInputChange}
               />
             </div>
@@ -159,7 +187,14 @@ const Post = () => {
           {!videoAsset ? (
             <>
               {loading ? (
-                <Spinner />
+                <div className="flex flex-col items-center">
+                  <Spinner />
+                  {uploadProgress && (
+                    <p className="text-gray-500 font-medium mt-2">
+                      Uploading: {uploadProgress.toFixed(0)}%
+                    </p>
+                  )}
+                </div>
               ) : (
                 <>
                   <label
@@ -177,9 +212,8 @@ const Post = () => {
                     id="file-upload"
                     type="file"
                     className="hidden"
-                    onChange={(e) =>
-                      videoAsset(URL.createObjectURL(e.target.files[0]))
-                    }
+                    onChange={uploadVideo}
+                    accept="video/mp4,video/x-m4v,video/*"
                   />
                 </>
               )}
@@ -207,12 +241,13 @@ const Post = () => {
           className="w-full h-64 resize-none border border-gray-300 rounded-md p-2 text-lg placeholder-gray-500 outline-none"
           placeholder="Description"
           value={description}
+          name="description"
           onChange={handleInputChange}
         ></textarea>
 
         <button
           className="w-full disabled:bg-blue-200 bg-blue-500 text-white py-2 px-4 rounded-md mt-4 hover:bg-blue-600"
-          onClick={uploadVideo}
+          // onClick={() => uploadVideoDetails()}
           disabled={loading}
         >
           Submit
