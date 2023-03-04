@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  updateProfile,
+  // updateProfile,
 } from "firebase/auth";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
