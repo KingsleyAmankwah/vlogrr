@@ -6,9 +6,6 @@ import { getFirestore } from "firebase/firestore";
 import { firebaseApp } from "../firebase-config";
 import Spinner from "./Spinner";
 
-const avatar =
-  "https://ak.picdn.net/contributors/3038285/avatars/thumb.jpg?t=164360626";
-
 const VideoCard = ({ videoData }) => {
   const firestoreDb = getFirestore(firebaseApp);
 
@@ -47,34 +44,36 @@ const VideoCard = ({ videoData }) => {
 
   if (isLoading) return <Spinner />;
 
-  // if (error) {
-  //   return (
-  //     <div className="w-full flex justify-center items-center">
-  //       <p className="text-red-500 text-sm">{error}</p>
-  //     </div>
-  //   );
-  // }
-
-  if (!videoData) {
+  if (error) {
     return (
       <div className="w-full flex justify-center items-center">
-        <p className="text-red-500 text-sm">Error loading video data.</p>
+        <p className="text-red-500 text-sm">{error}</p>
       </div>
     );
   }
+
+  // if (!videoData) {
+  //   return (
+  //     <div className="w-full flex justify-center items-center">
+  //       <p className="text-red-500 text-sm">Error loading video data.</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="w-full">
       <div className="border border-gray-400 rounded-lg shadow-md">
         <Link to={`/video/${videoData?.id}`}>
-          <video
-            className="w-full h-full object-cover object-center"
-            src={videoData?.videoUrl}
-            alt={videoData?.title}
-            controls
-            onMouseOver={(e) => e.target.play()}
-            onMouseOut={(e) => e.target.pause()}
-          />
+          <div className="w-full h-full overflow-hidden">
+            <video
+              className="w-full h-full object-cover object-center"
+              src={videoData?.videoUrl}
+              alt={videoData?.title}
+              controls
+              onMouseOver={(e) => e.target.play()}
+              onMouseOut={(e) => e.target.pause()}
+            />
+          </div>
         </Link>
         <div className="p-4">
           <div className="flex justify-between items-center">
@@ -82,13 +81,16 @@ const VideoCard = ({ videoData }) => {
               {videoData?.title}
             </p>
             <p className="text-gray-500 text-sm">
-              {moment(videoData?.timestamp?.toDate()).fromNow()}
+              {moment(new Date(parseInt(videoData.id)).toISOString()).fromNow()}
             </p>
           </div>
           <div className="flex items-center mt-4">
             <img
               className="w-10 h-10 rounded-full mr-4"
-              src={userInfo?.photoURL ? userInfo?.photoURL : avatar}
+              src={
+                userInfo?.photoURL ||
+                `https://ui-avatars.com/api/?name=${userInfo?.email[0]}`
+              }
               alt={userInfo?.displayName}
             />
             <p className="text-gray-500 text-sm">{userInfo?.displayName}</p>
