@@ -38,7 +38,7 @@ const VideoDetails = () => {
   return (
     <div className="w-full flex flex-col lg:flex-row">
       {videoData ? (
-        <div className="lg:w-2/3 lg:pr-4">
+        <div className="lg:w-2/3 lg:pr-4 w-full h-80 ">
           <video
             className="w-full object-cover object-center"
             src={videoData?.videoUrl}
@@ -59,7 +59,9 @@ const VideoDetails = () => {
                 {videoData?.title}
               </p>
               <p className="text-gray-500 text-sm">
-                {moment(videoData?.timestamp?.toDate()).fromNow()}
+                {moment(
+                  new Date(parseInt(videoData.id)).toISOString()
+                ).fromNow()}
               </p>
             </div>
             <p className="text-gray-500 text-sm">{videoData?.location}</p>
