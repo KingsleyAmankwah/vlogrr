@@ -1,6 +1,7 @@
 ## :dart: About
 
 Vlogrr is a platform that enable users to share amazing videos and also download videos as well.
+![post](https://user-images.githubusercontent.com/64941442/224469876-da1dde3b-1f0b-4c26-b5e5-cfb0ed61fce5.png)
 
 ## :sparkles: Features
 
