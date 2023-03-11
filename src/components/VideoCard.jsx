@@ -64,9 +64,9 @@ const VideoCard = ({ videoData }) => {
     <div className="w-full">
       <div className="border border-gray-400 rounded-lg shadow-md">
         <Link to={`/video/${videoData?.id}`}>
-          <div className="w-full h-full overflow-hidden">
+          <div className="w-full h-full lg:h-64 overflow-hidden">
             <video
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-contain object-center"
               src={videoData?.videoUrl}
               alt={videoData?.title}
               controls
