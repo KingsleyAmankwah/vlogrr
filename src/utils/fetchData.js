@@ -1,14 +1,14 @@
-import { firebaseApp } from "../firebase-config";
+// import { firebaseApp } from "../firebase-config";
 // prettier-ignore
-import {collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, where} from 'firebase/firestore';
+import {collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, where} from 'firebase/firestore';
 
 // fetch all docs from firebase
 export const getAllFeeds = async (firestoreDb) => {
   const feeds = await getDocs(
-    query(collection(firestoreDb, "videos"), orderBy("id", "desc"))
+    query(collection(firestoreDb, "videos"), orderBy("id", "desc"), limit(1))
   );
 
-  return feeds.docs.map((doc) => doc.data());
+  return feeds.docs[0].data();
 };
 
 // CategoryWise Feeds
