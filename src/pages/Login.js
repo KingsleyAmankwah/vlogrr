@@ -1,4 +1,4 @@
-// import sellCategoryImage from "../assets/jpg/sellCategoryImage.jpg";
+import vlogrrLogo from "../assets/vlogrr.png";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { useState } from "react";
@@ -32,7 +32,8 @@ function Login() {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        toast.success(`${user.displayName}, Welcome Back!`);
+        const username = user.displayName || user.email || user.uid;
+        toast.success(`${username}, Welcome Back!`);
         navigate("/");
         setLoading(false);
       })
@@ -131,9 +132,9 @@ function Login() {
             </div>
 
             <img
-              className="w-full h-auto object-cover bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
-              // src={sellCategoryImage}
-              alt="banner"
+              className="w-full h-auto object-contain bg-white hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
+              src={vlogrrLogo}
+              alt="vlogrr Logo"
             />
           </div>
         </div>
