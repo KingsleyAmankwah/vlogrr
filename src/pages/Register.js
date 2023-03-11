@@ -1,4 +1,4 @@
-// import sellCategoryImage from "../assets/jpg/sellCategoryImage.jpg";
+import vlogrrLogo from "../assets/vlogrr.png";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -177,9 +177,9 @@ function Register() {
             </div>
 
             <img
-              className="w-full h-auto object-cover bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
-              //   src={sellCategoryImage}
-              alt="banner"
+              className="w-full h-auto object-contain bg-white hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
+              src={vlogrrLogo}
+              alt="vlogrr Logo"
             />
           </div>
         </div>
