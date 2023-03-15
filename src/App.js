@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NoInternet from "./components/NoInternet";
+import Test from "./pages/Test";
 
 const App = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -39,7 +40,7 @@ const App = () => {
               </Route>
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
-              {/* <Route path="test" element={<Test />} /> */}
+              <Route path="test" element={<Test />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <ToastContainer />
