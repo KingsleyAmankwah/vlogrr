@@ -40,7 +40,7 @@ const App = () => {
               </Route>
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
-              <Route path="test" element={<Test />} />
+              {/* <Route path="test" element={<Test />} /> */}
               <Route path="*" element={<NotFound />} />
             </Routes>
             <ToastContainer />
